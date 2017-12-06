@@ -40,5 +40,3 @@ if __name__ == '__main__':
                     f.writelines((comment,date) + u'\n')
         time.sleep(1 + float(random.randint(1, 100)) / 20)
 
-if __name__ == "__main__":
-    print "hello"
