@@ -1,3 +1,4 @@
+# _*_ coding:utf8 _*_
 import re
 import requests
 import codecs
@@ -22,7 +23,7 @@ if __name__ == '__main__':
         cookies[name] = value
     html = requests.get(absolute_url, cookies=cookies, headers=header).content
     comment_list = []
-    # 获取评论
+    # 获取评
     comment_list, next_page,date_nodes= get_data(html,)
     soup = BeautifulSoup(html, 'lxml')
     comment_list = []
@@ -38,3 +39,6 @@ if __name__ == '__main__':
                     date= node.get_text().strip()
                     f.writelines((comment,date) + u'\n')
         time.sleep(1 + float(random.randint(1, 100)) / 20)
+
+if __name__ == "__main__":
+    print "hello"
