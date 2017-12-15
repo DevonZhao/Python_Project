@@ -1,31 +1,23 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # Title         :test4.py
-# Description      :I am test script
+# Description      : spider vcbeat medical top 100.
 # Author         :Devon
-# Date          :20160902
+# Date          :20171215
 # Version        :0.1
 # Usage         :python test4.py
 # Notes         :
 # python_version     :2.7.14
 #==============================================================================
 
-import re
 import requests
-import codecs
-import time
-import random
-from itertools import izip
 import lxml
 from bs4 import BeautifulSoup
 
-
 head_url = 'http://vcbeat.net/VB100'
 header={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0','Connection':'keep-alive'}
-
 html = requests.get(head_url, headers=header).content
 soup = BeautifulSoup(html,'lxml')
-
 jiabin = soup.select('.jiabing > li')
 i = 0
 print len(jiabin)
@@ -46,13 +38,12 @@ while range(len(jiabin)):
 '''
 
 con_img = soup.select('.con_img')
-while_list =  con_img[0].select('a')
+while_list = con_img[0].select('a')
 j = 0
 while range(len(while_list)):
     h = con_img[0].select('a')[j]['href']
     print h
     url_suf = h.split('/')[-1]
-
     ch_url = head_url+'/'+url_suf
     ch_html = requests.get(ch_url, headers=header).content
     ch_soup = BeautifulSoup(ch_html, 'lxml')
@@ -70,7 +61,6 @@ while range(len(while_list)):
     j += 1
     if j >= len(while_list):
         break
-# print con_img
 
 
 
