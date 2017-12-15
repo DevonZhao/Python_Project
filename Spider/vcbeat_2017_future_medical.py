@@ -115,8 +115,6 @@ while range(len(while_list)):
 #     #     print i
 #
 #
-#
-#
 # # s1 = str(l)
 # # print s1.decode("unicode-escape")
 # #
