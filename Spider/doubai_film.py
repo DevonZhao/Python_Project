@@ -16,16 +16,6 @@ import time
 import random
 from itertools import izip
 from bs4 import BeautifulSoup
-
-# https://movie.douban.com/subject/26605881/comments?status=P
-#
-#
-# https://movie.douban.com/subject/26605881/comments?start=40&limit=20&sort=new_score&status=P&percent_type=
-
-# absolute = 'https://movie.douban.com/subject/26322642/comments'
-# absolute_url = 'https://movie.douban.com/subject/26322642/comments?start=23&limit=20&sort=new_score&status=P&percent_type='
-# url = 'https://movie.douban.com/subject/26322642/comments?start={}&limit=20&sort=new_score&status=P'
-
 absolute = 'https://movie.douban.com/subject/26605881/comments'
 absolute_url = 'https://movie.douban.com/subject/26605881/comments?start=20&limit=20&sort=new_score&status=P&percent_type='
 url = 'https://movie.douban.com/subject/26322642/comments?start={}&limit=20&sort=new_score&status=P'
