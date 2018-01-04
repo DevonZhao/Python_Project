@@ -63,7 +63,7 @@ print type(test_fun)
 import os
 
 
-# 定义一个类，初始化id和name，然后定义个方法，让用户输入name，然后打印输入的名字。
+# 定义一个类，初始化id和name，然后定义个方法，让用户输入name，然后打印输入的名字
 
 class Job(object):
     def __init__(self, id, name):
