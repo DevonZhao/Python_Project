@@ -3,7 +3,7 @@
 # Title         :test4.py
 # Description      :I am test script
 # Author         :Devon
-# Date          :20160902
+# Date          :2018/01/04
 # Version        :0.1
 # Usage         :python test4.py
 # Notes         :
