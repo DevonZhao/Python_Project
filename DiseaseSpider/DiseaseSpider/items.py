@@ -11,4 +11,7 @@ import scrapy
 class DiseasespiderItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    symptom_name = scrapy.Field()
+    symptom_link = scrapy.Field()
+    disease_name = scrapy.Field()
+
