@@ -14,6 +14,7 @@ BOT_NAME = 'DiseaseSpider'
 SPIDER_MODULES = ['DiseaseSpider.spiders']
 NEWSPIDER_MODULE = 'DiseaseSpider.spiders'
 
+ITEM_PIPELINES = {'DiseaseSpider.pipelines.DiseasespiderPipeline':100}   #设置完成后要加入这一行。
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'DiseaseSpider (+http://www.yourdomain.com)'
