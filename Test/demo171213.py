@@ -37,7 +37,6 @@ def get_data():
     db.close()
     return d
 
-
 def send_mail(to_list, sub, content):
     me = "manager" + "<" + username + ">"
     msg = MIMEText(content, _subtype='html')
@@ -62,15 +61,72 @@ def parse_data():
         # print "Slave_IO_Running: " + d[i][12]
         # print "Slave_SQL_Running: " + d[i][13]
         # print "Seconds_Behind_Master: " + str(d[i][34])
-        mail_content = 'The following nodes have been down:    \n node name is:' + d[i][0] + '     \n master ip is:' + \
-                       d[i][3] + '     \n Slave_IO_Running status is:' + d[i][
-                           12] + '     \n Slave_SQL_Running status is:' + d[i][13]
-        if d[i][12] == "Yes" and d[i][13] == "Yes":
+        d0 = d[i][0]
+        d3 = d[i][3]
+        d12 = d[i][12]
+        d13 = d[i][13]
+        d34 = str(d[i][34])
+        # mail_content_slave = 'The following nodes have been down:    \n node name is:' + d0 + '     \n master ip is:' + \
+        #                d3 + '     \n Slave_IO_Running status is:' + d12 + '     \n Slave_SQL_Running status is:' + d13
+        # mail_content_gap = ' There is a gap in the following nodes:    \n node name is:' + d0 + '     \n master ip is:' + \
+        #                d3 + '     \n Seconds_Behind_Master is:' + d34
+
+        if d3 == 'ip1':
+            app = 'name1'
+        elif d3 == 'ip2':
+            app = 'name2'
+        elif d3 == 'ip3':
+            app = 'name3'
+        elif d3 == 'ip4':
+            app = 'name4'
+
+        mail_content_slave = """
+                        <table color="CCCC33" width="800" border="1" cellspacing="0" cellpadding="5" text-align="center">
+                                <tr>
+                                        <td text-align="center">Node Name</td>
+                                        <td text-align="center">Master Server IP</td>
+                                        <td>Application</td>
+                                        <td>IO Threading Status</td>
+                                        <td>SQL Threading Status</td>
+                                </tr>   
+                                <tr>   
+                                        <td text-align="center">%s </td>
+                                        <td>%s </td>
+                                        <td>%s </td>
+                                        <td>%s </td>
+                                        <td>%s </td>
+                                </tr>
+                        </table>""" % (d0, d3, app, d12, d13)
+
+        mail_content_gap = """
+                                <table color="CCCC33" width="800" border="1" cellspacing="0" cellpadding="5" text-align="center">
+                                        <tr>
+                                                <td text-align="center">Node Name</td>
+                                                <td text-align="center">Master Server IP</td>
+                                                <td text-align="center">Application</td>
+                                                <td>Delay(s)</td>
+                                        </tr>   
+                                        <tr>   
+                                                <td text-align="center">%s </td>
+                                                <td>%s </td>
+                                                <td>%s </td>
+                                                <td>%s </td>
+                                        </tr>
+                                </table>""" % (d0, d3, app, d34)
+
+
+
+
+        # 判断mysql从库是不是有延迟
+        if int(d34) == 0:
+            send_mail(to_list, 'BigData Mysql Slave Gap Report:', mail_content_gap)
+
+        # 判断主从是不是存在问题
+        if d12 == "Yes" and d13 == "Yes":
             print 1
         else:
             print 0
-            send_mail(to_list, 'BigData Mysql slave status:', mail_content)
-
+            send_mail(to_list, 'BigData Mysql Slave Status:', mail_content_slave)
 
 if __name__ == '__main__':
     parse_data()
