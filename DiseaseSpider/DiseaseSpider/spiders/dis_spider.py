@@ -21,6 +21,9 @@ class DiseaseSpider(scrapy.Spider):
     #     with open(filename, 'wb') as f:
     #         f.write(response.body)
 
+
+
+
     def parse(self, response):
         for sel in response.xpath('//div[@class="ill-lists"]/ul/li[not(@class="empty")]'):    # 排除某个子节点使用not语法，具体见https://developer.mozilla.org/en-US/docs/Web/XPath/Functions/not
             # print(sel) # 在调试的时候可以打印出sel的内容便于分析
