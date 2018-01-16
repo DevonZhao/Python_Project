@@ -16,6 +16,15 @@ NEWSPIDER_MODULE = 'DiseaseSpider.spiders'
 
 ITEM_PIPELINES = {'DiseaseSpider.pipelines.DiseasespiderPipeline':100}   #设置完成后要加入这一行。
 
+# mongodb 主机信息
+MONGODB_HOST = '192.168.56.142'
+MONGODB_PORT = 27017
+MONGODB_DBNAME = 'disease'
+MONGODB_DOCNAME = 'symptom'
+
+
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'DiseaseSpider (+http://www.yourdomain.com)'
 

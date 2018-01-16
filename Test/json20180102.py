@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# version: 3.6
 #Note：json处理的应用实例
 '''
 
