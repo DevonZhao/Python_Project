@@ -14,4 +14,4 @@ class DiseasespiderItem(scrapy.Item):
     symptom_name = scrapy.Field()
     symptom_link = scrapy.Field()
     disease_name = scrapy.Field()
-
+    # disease_desc = scrapy.Field()
