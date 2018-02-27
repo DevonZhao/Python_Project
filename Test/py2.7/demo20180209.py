@@ -22,7 +22,9 @@ if sys.getdefaultencoding() != 'utf-8':
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
-url = 'http://newhouse.fang.com/house/s/?from=pd'
+url1 = 'http://newhouse.fang.com/house/s/?from=pd'
+url = 'http://bj.sofang.com/new/area'
+
 
 header={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0','Connection':'keep-alive'}
 
@@ -44,11 +46,16 @@ def deal_code():
             encoding = html.apparent_encoding
     return encoding
 
-enco = deal_code()
-encode_content = html.content.decode(enco, 'replace').encode('utf-8', 'replace')  # 这里只使用解码也是可以的。
-print encode_content
+# enco = deal_code()
+# encode_content = html.content.decode(enco, 'replace').encode('utf-8', 'replace')  # 这里只使用解码也是可以的。
+# print encode_content
+encode_content = html.content
 
 soup = BeautifulSoup(encode_content,'lxml')
-info_soup = soup.find_all()
+i = soup.find_all("a", target="_blank")
+info_soup = soup.prettify()
 print info_soup
+# print i
+
+
 
