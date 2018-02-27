@@ -13,8 +13,6 @@
 import sys, urllib, urllib2, json
 
 url = 'http://apis.baidu.com/apistore/dhc/getalltemplate?user=640ea6c0ffc2dd5dea3435f95d7b477e'
-
-
 req = urllib2.Request(url)
 
 req.add_header("apikey", "640ea6c0ffc2dd5dea3435f95d7b477e")
