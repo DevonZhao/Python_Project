@@ -1,0 +1,149 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# Title         :PyMysqlbackup.py
+# Description      :
+# Author         :Devon
+# Date          :2018/3/21
+# Version        :1.0
+# Platform       : windows
+# Usage         :python test4.py
+
+# python_version     :2.7.14
+#==============================================================================
+
+# Import required python libraries
+import os
+import time
+import datetime
+import pipes
+
+
+
+
+DB_HOST = 'your_mysql_host' #ie. localhost
+DB_USER = 'your_user_name'
+DB_USER_PASSWORD = 'your_password'
+#DB_NAME = '/backup/dbnames.txt'
+DB_NAME = 'your_db_name'
+BACKUP_PATH = '/tmp/'
+conf_file = '/etc/my.cnf'
+port = '3306'
+bak_user = 'root'
+bak_pwd = 'root'
+
+
+
+DATETIME = time.strftime('%Y%m%d-%H%M%S')
+
+TODAYBACKUPPATH = BACKUP_PATH + DATETIME
+
+# Checking if backup folder already exists or not. If not exists will create it.
+try:
+    os.stat(TODAYBACKUPPATH)
+except:
+    os.mkdir(TODAYBACKUPPATH)
+
+inno_path = os.system('which innobackupex')
+inno_cmd = "innobackupex"
+if inno_path == 0:
+    print 'congratulate,innobackex have been installed,continue.'
+else:
+    print 'the innobackpex tool is not been installed, you need install it to continue.'
+
+b = os.popen('which ls')  # 这里b只能调用一次。
+# print b.read().split('/')[-1].replace('\n', '') == 'ls':
+if b.read().split('/')[-1].replace('\n', '') == 'ls':
+    print 'sucess'
+    inno_cmd = os.popen('which ls').read()
+
+inno_full_cmd = "%s --defaults-file=%s --port=%s --user=%s --password=%s %s "%(inno_cmd, conf_file, port, bak_user, bak_pwd, TODAYBACKUPPATH)
+print inno_full_cmd
+os.system(inno_full_cmd)
+
+# innobackupex --defaults-file=/etc/my.cnf --port=3316 --user=root --password=123456 --stream=tar  /data/backup | gzip > /data/backup/`date +%F_%H-%M-%S`.tar.gz
+#
+# step 2:
+# innobackupex --user=root --apply-log /data/2016-07-15_16-43-33
+# step
+# innobackupex --defaults-file=/data/3307/3307.cnf --user=root --copy-back /data/2016-07-15_16-43-33
+#
+#
+# 压缩备份：
+# innobackupex --defaults-file=/etc/my.cnf --port=3306 --databases="db_devon information_schema performance_schema mysql"  --user=inno_bak --password=123123 --stream=tar  /data/backup| gzip > /data/backup/`date +%F_%H-%M-%S`.tar.gz
+# 非压缩备份：
+# innobackupex --defaults-file=/etc/my.cnf --port=3306 --databases="db_devon information_schema performance_schema mysql"  --user=inno_bak --password=123123  /data/backup
+#
+# 恢复刚刚备份的备份数据库：
+# step 1:
+# innobackupex --user=root --apply-log /data/2016-11-06_21-14-37
+# step 2:
+# innobackupex --defaults-file=/etc/my.cnf --user=root --copy-back /data/2016-11-06_21-14-37
+#
+
+innobackupex --user=root --apply-log opt/dbbackup/backup/physical/20180321/base_20180321
+innobackupex --defaults-file=/etc/my.cnf --user=root --copy-back opt/dbbackup/backup/physical/20180321/base_20180321
+
+# tar备份和xbstream备份
+
+# 判断备份软件是否安装
+
+# 判断备份目录是否存储
+
+# 备份开始时间
+
+#备份结束时间
+#备份所需总时间
+# 备份一致性校验
+# 备份恢复情况
+# 备份失败处理
+# 备份过程中的日志记录
+
+# Getting current datetime to create seprate backup folder like "12012013-071334".
+
+'''
+# Code for checking if you want to take single database backup or assinged multiple backups in DB_NAME.
+print "checking for databases names file."
+if os.path.exists(DB_NAME):
+    file1 = open(DB_NAME)
+    multi = 1
+    print "Databases file found..."
+    print "Starting backup of all dbs listed in file " + DB_NAME
+else:
+    print "Databases file not found..."
+    print "Starting backup of database " + DB_NAME
+    multi = 0
+
+# Starting actual database backup process.
+if multi:
+   in_file = open(DB_NAME,"r")
+   flength = len(in_file.readlines())
+   in_file.close()
+   p = 1
+   dbfile = open(DB_NAME,"r")
+
+   while p <= flength:
+       db = dbfile.readline()   # reading database name from file
+       db = db[:-1]         # deletes extra line
+       dumpcmd = "mysqldump -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+       os.system(dumpcmd)
+       compcmd = "tar -zcvf " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".tar.gz " +  pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+       os.system(compcmd)
+       delcmd = "rm " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+       os.system(delcmd)
+       p = p + 1
+   dbfile.close()
+else:
+   db = DB_NAME
+   dumpcmd = "mysqldump -h " + DB_HOST + " -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+   os.system(dumpcmd)
+   compcmd = "tar -zcvf " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".tar.gz " +  pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+   os.system(compcmd)
+   delcmd = "rm " + pipes.quote(TODAYBACKUPPATH) + "/" + db + ".sql"
+   os.system(delcmd)
+
+print "Backup script completed"
+print "Your backups has been created in '" + TODAYBACKUPPATH + "' directory"
+
+
+
+'''
