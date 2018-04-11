@@ -20,6 +20,7 @@ html = requests.get(head_url, headers=header).content
 soup = BeautifulSoup(html,'lxml')
 jiabin = soup.select('.jiabing > li')
 i = 0
+print
 print len(jiabin)
 while range(len(jiabin)):
     print "*" * 30
