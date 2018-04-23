@@ -7,6 +7,13 @@
 # @version :
 # @Desc    : 二分查找算法python实现
 
+"""
+
+算法核心：在查找表中不断取中间元素与查找值进行比较，以二分之一的倍率进行表范围的缩小。
+
+
+"""
+
 
 def binary_search(lis, key):
     low = 0
@@ -25,6 +32,7 @@ def binary_search(lis, key):
             return mid
     print("times: %s" % time)
     return False
+
 
 if __name__ == '__main__':
     LIST = [1, 5, 7, 8, 22, 54, 99, 123, 200, 222, 444]

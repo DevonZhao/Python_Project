@@ -3,6 +3,9 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
+
 
 
 # Reading data locally
@@ -18,4 +21,12 @@ print(df.dtypes)
 print(df.sort_values('Complaint ID').head())
 
 
-print(df.ix[:,0].head()) #打印第一列的前5行
+print(df.ix[:,0].head())  # 打印第一列的前5行
+print(df.ix[10:20, 0:3])  # 取出从11到20行的前3列数据
+print("*"*100)
+
+print(df.describe())  # 对数据的统计特性进行描述
+
+print("*"*100)
+
+
