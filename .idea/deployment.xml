@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="db_platform">
+  <component name="PublishConfigData" autoUpload="Always" serverName="bigdata">
     <serverData>
       <paths name="bigdata">
         <serverdata>
           <mappings>
             <mapping deploy="/Python_Project" local="$PROJECT_DIR$" web="/Python_Project" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="db_platform">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/db_platform" local="$PROJECT_DIR$/../../db_platform" web="/db_platform" />
           </mappings>
         </serverdata>
       </paths>

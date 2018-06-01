@@ -3,10 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Python_Project.iml" filepath="$PROJECT_DIR$/.idea/Python_Project.iml" />
-      <module fileurl="file://$USER_HOME$/Downloads/Yearning-master/Yearning-master/.idea/Yearning-master.iml" filepath="$USER_HOME$/Downloads/Yearning-master/Yearning-master/.idea/Yearning-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../binlog2sql/.idea/binlog2sql.iml" filepath="$PROJECT_DIR$/../../binlog2sql/.idea/binlog2sql.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../db_platform/.idea/mypro.iml" filepath="$PROJECT_DIR$/../../db_platform/.idea/mypro.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../weibospider-master/weibospider-master/.idea/weibospider-master.iml" filepath="$PROJECT_DIR$/../../weibospider-master/weibospider-master/.idea/weibospider-master.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/carry-master/.idea/carry-master.iml" filepath="$USER_HOME$/Downloads/carry-master/.idea/carry-master.iml" />
+      <module fileurl="file://$USER_HOME$/db_platform/.idea/mypro.iml" filepath="$USER_HOME$/db_platform/.idea/mypro.iml" />
     </modules>
   </component>
 </project>
