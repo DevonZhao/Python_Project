@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# Title         :0428.py.py
+# Title         :0428.py
 # Description      :
 # Author         :Devon
 # Date          :2018/4/28
@@ -11,16 +11,10 @@
 # python_version     :2.7.14
 #==============================================================================
 
-import os,sys
-import re
+import os
 import json
 
-# for line in open("/root/medicationRemindNotify.json"):
-#
-#
-#     print line,
-#     data = json.loads(line)
-#     print type(data)
+os.system('rm -f /tmp/open.txt')
 f = open("/root/medicationRemindNotify.json","r")
 lines = f.readlines()
 for line in lines:
@@ -29,6 +23,7 @@ for line in lines:
 
     # print data['_id']['$oid'],data['doctorId']['$numberLong'],data['remindTime']['$numberLong']
     # print data['patientDrugs']
+
     for i in xrange(len(data['patientDrugs'])):
         # print data['_id']['$oid'],data['doctorId']['$numberLong'],data['remindTime']['$numberLong'],data['patientDrugs'][i]['patientId']['$numberLong'],\
         #     data['patientDrugs'][i]['recommandId']['$numberLong'],data['patientDrugs'][i]['createdAt']['$numberLong']
@@ -45,7 +40,6 @@ for line in lines:
             data['patientDrugs'][i]['medications'][j]['name']+','+data['patientDrugs'][i]['medications'][j]['endTime']['$numberLong']
             print data_str
             print type(data_str.encode("gbk"))
-
 
             with open("/tmp/open.txt", "a") as f:
                 f.write(data_str.encode("utf8")+'\n')
