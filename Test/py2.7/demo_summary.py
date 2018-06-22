@@ -81,6 +81,7 @@ def common_code_seg():
     print targetList
 
 
+
 def main():
     # get_data('show full processlist;')
     test_sql_data('show full processlist;')
