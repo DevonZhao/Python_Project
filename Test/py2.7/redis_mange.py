@@ -12,7 +12,7 @@
 #==============================================================================
 
 import redis
-r = redis.StrictRedis(host='10.9.2.13',password='7lkddfdfdff223D', port=6379, db=0)
+r = redis.StrictRedis(host='',password='', port=6379, db=0)
 ret = r.scan_iter()
 i  = 0
 for a in ret:
