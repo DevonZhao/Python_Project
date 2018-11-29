@@ -379,11 +379,118 @@ class MySQLBinlogStat(object):
                 self.add_update_row_col_count(schema=schema, table=table,
                                               col=column.name, count=1)
 
+    """
+    这下面是我增加的内容
+    
+    """
+
+    @property
+    def trx_dml_stat_info(self):
+        """table_stat_info 是一个属性 - getter 方法"""
+        return self._trx_dml_stat_info
+
+    @trx_dml_stat_info.setter
+    def trx_dml_stat_info(self, value):
+        """table_stat_info属性的 setter 方法"""
+        self._trx_dml_stat_info = value
+
+    def init_trx_dml_stat_struct(self, pos=None):
+        if pos not in self.trx_dml_stat_info:  # 初始化 数据库
+            self.table_stat_info[pos] = {}
+
+    def add_trx_dml_count(self, pos=None, count=0):
+        self.trx_dml_stat_info[pos]+= count
+
+
+    def run_trx_parse(self):
+        dict = {}
+        d = []
+        # lst = []
+        i = 0
+        j = 0
+        k = 0
+        for binlogevent in self.stream:
+            if binlogevent.event_type in [2]:  # begin
+                begin_time = binlogevent.timestamp
+                # print "begin time:",begin_time
+
+            if binlogevent.event_type in [23, 30, 24, 31, 25, 32]:
+                if binlogevent.event_type in [23, 30]:
+                    insert_count = len(binlogevent.rows)
+                    i +=insert_count
+                    dict['insert'] = i
+                    # print(dict)
+                elif binlogevent.event_type in [24, 31]:
+                    update_count = len(binlogevent.rows)
+                    j+=update_count
+                    dict['update'] = j
+                    # print(dict)
+                elif binlogevent.event_type in [25, 32]:
+                    delete_count = len(binlogevent.rows)
+                    j += delete_count
+                    dict['delete'] = j
+            else:
+                i=0
+                j=0
+                k=0
+                if binlogevent.event_type in [16]:
+                    end_time = binlogevent.timestamp
+                    duration = (end_time - begin_time)
+                    end_pos = binlogevent.packet.log_pos
+                    xid = binlogevent.xid
+                    dict['xid'] = xid
+                    dict['duration'] = duration
+                    dict['end_pos'] = end_pos
+                    if dict<>{}:
+                        d.append(dict)
+                dict = {}
+            # if binlogevent.event_type in [16]:  # xid,commit
+            #     end_time = binlogevent.timestamp
+            #     duration = (end_time-begin_time)
+            #     xid = binlogevent.xid  #添加pos点
+            #     print "end time:", end_time
+            #     # print(binlogevent.dump())
+            #     print(binlogevent.packet.log_pos)
+        # print(d)
+        self.print_format(d)
+
+
+    def print_trx_dml_res(self):
+        for schema, tables in self.table_stat_info.iteritems():
+            for table, stat in tables.iteritems():
+                key = '{schema}.{table}'.format(schema=schema, table=table)
+                yield {key: stat['table_dml_count']}
+
+
+    def print_trx_sort_stat(self, by='duration'):
+        """排序打印统计结果"""
+
+        by = by.lower()  # 一律转化为小写
+
+        # 对统计进行排序
+        s_stat = self.run_trx_parse()
+        print(s_stat)
+        sorted_stat = sorted(
+            self.run_trx_parse(),
+            key=lambda s_stat: s_stat.values()[0][by],
+            reverse=True,
+        )
+        self.print_format(sorted_stat[0:6])
+
+
+
+
+
+
+
+
+
+
+
+
+
     def run_parse(self):
         """循环解析并统计"""
-        dict = {}
-        d = {}
-        lst = []
         for binlogevent in self.stream:
             # binlogevent._dump()
 
@@ -402,43 +509,6 @@ class MySQLBinlogStat(object):
             else:
                 # print binlogevent.event_type,binlogevent.event_size,binlogevent.timestamp
                 pass
-
-            if binlogevent.event_type in [2]:  # begin
-                begin_time = binlogevent.timestamp
-                print "begin time:",begin_time
-
-            if binlogevent.event_type in [23, 30, 24, 31, 25, 32]:
-                if binlogevent.event_type in [23, 30]:
-                    insert_count = len(binlogevent.rows)
-                    dict['insert'] = insert_count
-
-                if binlogevent.event_type in [24, 31]:
-                    update_count = len(binlogevent.rows)
-                    dict['update'] = update_count
-                if binlogevent.event_type in [25, 32]:
-                    delete_count = len(binlogevent.rows)
-                    dict['delete'] = delete_count
-                print dict
-                lst.append(dict)
-
-
-                    # for schema, tables in self.table_stat_info.iteritems():
-                #     for table, stat in tables.iteritems():
-                #         key = '{schema}.{table}'.format(schema=schema, table=table)
-                #         print stat['table_dml_count']
-
-            if binlogevent.event_type in [16]:  # xid,commit
-                end_time = binlogevent.timestamp
-                print "end time:",end_time
-                print (end_time-begin_time),binlogevent.xid  #添加pos点
-        print lst
-            # {
-            #     "xid:569": {
-            #         "insert": 10,
-            #         "update": 5,
-            #         "delete": 0
-            #     }
-            # }
 
 
 
@@ -473,11 +543,7 @@ class MySQLBinlogStat(object):
                 yield {key: stat['table_dml_count']}
 
 
-    def print_trx_dml_res(self):
-        for schema, tables in self.table_stat_info.iteritems():
-            for table, stat in tables.iteritems():
-                key = '{schema}.{table}'.format(schema=schema, table=table)
-                yield {key: stat['table_dml_count']}
+
 
 
 
@@ -535,6 +601,10 @@ def parse_args():
                         default='insert', help='Specify show statistic sort by, default: insert',
                         metavar='insert/update/delete')
 
+    parser.add_argument('--stat-pattern', dest='stat_pat', action='store',
+                        default='xid', help='Specify type of the statistics binlog, default: insert',
+                        metavar='xid/table')
+
     args = parser.parse_args()
 
     return args
@@ -571,8 +641,8 @@ def main():
     mysql_settings = {
         'host': args.host,
         'port': args.port,
-        'user': 'rt',
-        'passwd': '123123',
+        'user': args.username,
+        'passwd': args.password,
     }
 
     skip_to_timestamp = (
@@ -585,7 +655,7 @@ def main():
         'server_id': args.server_id,
         'slave_uuid': args.slave_uuid,
         'blocking': args.blocking,
-        'log_file': '/var/lib/mysql/binlog/binlog.000007',
+        'log_file': args.log_file,
         'log_pos': args.log_pos,
         'skip_to_timestamp': skip_to_timestamp,
         'only_events': [UpdateRowsEvent, WriteRowsEvent, DeleteRowsEvent,XidEvent,BeginLoadQueryEvent,QueryEvent],
@@ -599,19 +669,35 @@ def main():
     #     print a1.dump()
 
     mysql_binlog_stat = MySQLBinlogStat(stream)
-    try:
-        mysql_binlog_stat.run_parse()
 
-    except KeyboardInterrupt:  # 捕捉 KeyboardInterrupt 异常
-        print 'force to exit...'
+    if args.stat_pat == 'table':
+        try:
+            mysql_binlog_stat.run_parse()
 
-    except Exception as e:
-        print traceback.format_exc()
+        except KeyboardInterrupt:  # 捕捉 KeyboardInterrupt 异常
+            print 'force to exit...'
 
-    finally:  # 最终需要关闭流
-        mysql_binlog_stat.stream.close()
-    # 打印数据
-    mysql_binlog_stat.print_sort_stat(by=args.sorted_by)
+        except Exception as e:
+            print traceback.format_exc()
+
+        finally:  # 最终需要关闭流
+            mysql_binlog_stat.stream.close()
+        # 打印数据
+        mysql_binlog_stat.print_sort_stat(by=args.sorted_by)
+    else:
+        try:
+            mysql_binlog_stat.run_trx_parse()
+
+        except KeyboardInterrupt:  # 捕捉 KeyboardInterrupt 异常
+            print 'force to exit...'
+
+        except Exception as e:
+            print traceback.format_exc()
+
+        finally:  # 最终需要关闭流
+            mysql_binlog_stat.stream.close()
+        # 打印数据
+        # mysql_binlog_stat.print_trx_dml_res()
 
 if __name__ == '__main__':
     main()
